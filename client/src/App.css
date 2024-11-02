@@ -277,3 +277,21 @@ button :hover {
     font-family: "poppins";
     color: #3949AB;
 }
+.file-container {
+    height: inherit;
+    width: 100%;
+    overflow-y: scroll;
+}
+.file-item {
+    height: 15%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.253);
+}
+.file-item a {
+    color: black;
+    text-decoration: none;
+    font-family: "poppins";
+    font-size: 1.2vw;
+}

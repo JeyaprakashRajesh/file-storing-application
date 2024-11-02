@@ -3,18 +3,18 @@ import FileUpload from "../components/FileUpload";
 import axios from "axios";
 
 function Dashboard() {
-  const [files, setFiles] = useState([]); 
-  const [loading, setLoading] = useState(true); 
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
         const response = await axios.get("http://localhost:7000/files", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setFiles(response.data.files); 
+        setFiles(response.data.files);
       } catch (error) {
         console.error("Error fetching files:", error);
       } finally {
@@ -23,7 +23,7 @@ function Dashboard() {
     };
 
     fetchFiles();
-  }, []); 
+  }, []);
 
   return (
     <div className="main">
@@ -33,24 +33,24 @@ function Dashboard() {
       </div>
       <div className="content">
         <div className="content-container">
-          {loading ? ( 
+          {loading ? (
             <div className="loading">Loading files...</div>
           ) : files.length > 0 ? (
-            <ul>
+            <div className="file-container">
               {files.map((file, index) => (
-                <li key={index}>
-                  <a href={`http://localhost:7000${file.url}`} target="_blank" rel="noopener noreferrer">
+                <div key={index} className="file-item">
+                  <a href={`http://localhost:7000${file.url}`} target="_blank" rel="noopener noreferrer" className="file-link">
                     {file.name}
                   </a>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           ) : (
             <div className="loading">No files in database</div>
           )}
         </div>
         <div className="content-container">
-          <FileUpload setFile={setFiles} /> 
+          <FileUpload setFile={setFiles} />
         </div>
       </div>
     </div>
