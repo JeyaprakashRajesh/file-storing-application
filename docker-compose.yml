@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    volumes:
+      - /mnt/mongo:/data/db
+    networks:
+      - app-network
+
+  server1:
+    build: ./server # Build the server from the server directory
+    container_name: server1
+    environment:
+      MONGO_URL: mongodb://mongo:27017/FILE-STORING-APPLICATION
+      PORT: 7000
+      MULTER_FILE_PATH: /mnt/multer_storage/files
+      JWT_SECRET: your_jwt_secret_here
+    volumes:
+      - /mnt/multer_storage/files:/mnt/multer_storage/files
+    networks:
+      - app-network
+
+  server2:
+    build: ./server # Build another server instance
+    container_name: server2
+    environment:
+      MONGO_URL: mongodb://mongo:27017/FILE-STORING-APPLICATION
+      PORT: 7000
+      MULTER_FILE_PATH: /mnt/multer_storage/files
+      JWT_SECRET: your_jwt_secret_here
+    volumes:
+      - /mnt/multer_storage/files:/mnt/multer_storage/files
+    networks:
+      - app-network
+
+
+  client:
+    build: ./client # Build the Vite client from the client directory
+    container_name: vite_client
+    ports:
+      - "5173:5173" # Map port 5173 on the host to port 5173 in the container
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

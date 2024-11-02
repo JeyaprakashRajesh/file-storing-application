@@ -8,8 +8,6 @@ import { createToken } from "./jwt/jwt.js";
 import { createUser } from "./database/mongodb.js";
 import cors from 'cors';
 
-
-
 dotenv.config();
 
 const app = express();
@@ -22,7 +20,8 @@ const PORT = process.env.PORT;
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const userEmail = req.user.email; 
-        const userFolder = path.join(process.cwd(), process.env.MULTER_FILE_PATH, userEmail);
+        // Use the MULTER_FILE_PATH from the environment
+        const userFolder = path.join(process.env.MULTER_FILE_PATH, userEmail);
         if (!fs.existsSync(userFolder)) {
             fs.mkdirSync(userFolder, { recursive: true });
         }
@@ -70,9 +69,10 @@ app.post("/upload", verifyMiddleware, upload.single('file'), (req, res) => {
         res.status(500).json({ message: "File upload failed" });
     }
 });
+
 app.get('/files', verifyMiddleware, async (req, res) => {
     const userEmail = req.user.email; 
-    const userFolder = path.join(process.cwd(), process.env.MULTER_FILE_PATH, userEmail);
+    const userFolder = path.join(process.env.MULTER_FILE_PATH, userEmail);
     
     try {
         const files = await fs.promises.readdir(userFolder);
